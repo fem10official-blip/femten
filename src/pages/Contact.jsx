@@ -4,9 +4,9 @@ import { InstagramIcon, FacebookIcon } from '../components/SocialIcons'
 import { useInView } from '../hooks/useInView'
 
 const contactDetails = [
-  { label: 'Email', value: 'hello@fem10.pk', href: 'mailto:hello@fem10.pk', Icon: Mail },
-  { label: 'Phone', value: '+92 300 1234567', href: 'tel:+923001234567', Icon: Phone },
-  { label: 'Address', value: 'Islamabad, Pakistan', href: null, Icon: MapPin },
+  { label: 'Email', value: 'fem10official@gmail.com', href: 'mailto:fem10official@gmail.com', Icon: Mail },
+  { label: 'Phone', value: '0302 7727778', href: 'tel:+923027727778', Icon: Phone },
+  { label: 'Address', value: 'Vehari, Pakistan', href: null, Icon: MapPin },
   { label: 'Hours', value: 'Mon-Sat, 9am - 6pm', href: null, Icon: Clock },
 ]
 
@@ -171,7 +171,7 @@ function Contact() {
         <p className="text-sm text-stone-600 sm:text-base">Follow us for hair care tips</p>
         <div className="mt-4 flex items-center justify-center gap-4">
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/fem10_official?utm_source=qr&stkn=YzhibXJ2NDhsajZy"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
@@ -180,7 +180,7 @@ function Contact() {
             <InstagramIcon className="h-5 w-5" />
           </a>
           <a
-            href="https://facebook.com"
+            href="https://www.facebook.com/share/1F2xbCQ27r/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Facebook"

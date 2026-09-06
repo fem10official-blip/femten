@@ -3,17 +3,26 @@ import { Link } from 'react-router-dom'
 function Hero() {
   return (
     <section className="relative flex min-h-[100svh] items-end overflow-hidden md:min-h-screen md:items-center">
+      {/* Desktop: landscape hero — position keeps model's full face in frame */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat max-md:bg-[center_18%] md:!bg-[center_right]"
+        className="absolute inset-0 hidden bg-cover bg-no-repeat md:block md:bg-[82%_12%]"
         style={{
           backgroundImage: "url('/images/hero/hero-model-landscape.png')",
         }}
         aria-hidden="true"
       />
 
-      {/* Mobile veil */}
+      {/* Mobile: portrait crop — face near top */}
+      <img
+        src="/images/product/product-model-giant-bottle.png"
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover object-[50%_8%] md:hidden"
+        aria-hidden="true"
+      />
+
+      {/* Mobile veil — light so the photo stays visible */}
       <div
-        className="absolute inset-0 bg-gradient-to-t from-cream via-cream/85 to-cream/20 md:hidden"
+        className="absolute inset-0 bg-gradient-to-t from-cream/80 via-cream/15 to-transparent md:hidden"
         aria-hidden="true"
       />
 

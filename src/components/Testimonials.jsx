@@ -50,22 +50,19 @@ function Testimonials() {
       <div className="px-3 pt-2 sm:px-6 lg:px-8">
         <div className="relative min-h-[58vh] w-full overflow-hidden rounded-2xl shadow-md sm:min-h-[70vh] sm:rounded-3xl lg:min-h-[78vh]">
           <img
-            src="/images/lifestyle/testimonials-hair-landscape.png"
-            alt="Woman with healthy flowing hair in soft natural light"
-            className="absolute inset-0 h-full w-full object-cover object-[72%_18%] sm:object-[75%_12%] md:object-[80%_8%]"
+            src="/images/lifestyle/testimonials-hair-shine.png"
+            alt="Woman with long shiny healthy hair — Femten shampoo results"
+            className="absolute inset-0 h-full w-full object-cover object-[68%_20%] sm:object-[70%_15%] md:object-[72%_12%]"
           />
 
+          {/* Soft wash only on left for text — keep girl/hair clear on the right */}
           <div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-cream via-cream/50 to-transparent"
-            aria-hidden="true"
-          />
-          <div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-cream/60 via-cream/20 to-transparent md:from-cream/40"
+            className="pointer-events-none absolute inset-y-0 left-0 w-[55%] bg-gradient-to-r from-cream/80 via-cream/35 to-transparent md:w-[48%]"
             aria-hidden="true"
           />
 
           <div className="relative z-10 flex h-full min-h-[58vh] max-w-xl flex-col justify-end px-4 pb-10 pt-10 sm:min-h-[70vh] sm:justify-start sm:px-8 sm:pb-24 sm:pt-16 lg:min-h-[78vh] lg:px-12 lg:pt-20">
-            <div className="rounded-2xl bg-cream/80 p-4 backdrop-blur-sm sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
+            <div className="rounded-2xl bg-cream/85 p-4 backdrop-blur-sm sm:bg-cream/70 sm:p-5 md:bg-transparent md:p-0 md:backdrop-blur-none">
               <span className="mb-3 inline-flex w-fit items-center rounded-full bg-cream px-3.5 py-1.5 text-[11px] font-medium text-stone-800 shadow-sm sm:mb-4 sm:text-sm">
                 Extra Care, Everyday 🌿
               </span>

@@ -1,15 +1,21 @@
 import { useState } from 'react'
-import { Check, Droplets, Hand, Sparkles } from 'lucide-react'
+import { Droplets, Hand, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { MAIN_PRODUCT, openWhatsAppBuyNow } from '../data/product'
 import { useInView } from '../hooks/useInView'
 
+const botanicals = [
+  { name: 'Amla', note: 'Strength' },
+  { name: 'Reetha', note: 'Cleanse' },
+  { name: 'Shikakai', note: 'Shine' },
+]
+
 const features = [
-  'Sulfate-Free',
-  'For All Hair Types',
-  'Dermatologically Tested',
-  '100% Natural Extracts',
+  { label: 'Sulfate-Free', detail: 'No harsh foam' },
+  { label: 'All Hair Types', detail: 'Daily gentle' },
+  { label: 'Dermatologically Tested', detail: 'Skin-safe' },
+  { label: 'Natural Extracts', detail: 'Botanical care' },
 ]
 
 const ritualSteps = [
@@ -45,6 +51,7 @@ const highlights = [
 function ProductShowcase() {
   const { addToCart } = useCart()
   const [added, setAdded] = useState(false)
+  const product = useInView(0.15)
   const ritual = useInView(0.12)
 
   const handleAdd = () => {
@@ -55,63 +62,96 @@ function ProductShowcase() {
 
   return (
     <section className="bg-cream">
-      {/* Split layout */}
-      <div className="flex min-h-0 flex-col lg:min-h-screen lg:flex-row">
-        <div className="relative flex h-[52vh] w-full shrink-0 items-center justify-center overflow-hidden bg-cream p-3 sm:h-[60vh] sm:p-5 lg:h-auto lg:min-h-screen lg:w-1/2 lg:p-8">
+      {/* Bestseller — editorial split */}
+      <div
+        ref={product.ref}
+        className="mx-auto grid max-w-6xl items-center gap-6 px-4 py-10 sm:gap-10 sm:px-6 sm:py-14 lg:grid-cols-2 lg:gap-12 lg:px-8 lg:py-20"
+      >
+        <div
+          className={[
+            'relative mx-auto w-full max-w-sm overflow-hidden rounded-2xl bg-[#E8E0D4] shadow-[0_25px_60px_-20px_rgba(44,24,16,0.3)] ring-1 ring-[#2C1810]/10 transition-all duration-700 sm:max-w-md sm:rounded-3xl lg:max-w-md xl:max-w-lg',
+            product.visible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0',
+          ].join(' ')}
+        >
           <img
             src="/images/product/our-best-seller.jpeg"
             alt="Femten Extra Gentle Daily Shampoo — Our Bestseller"
-            className="h-full w-full rounded-2xl object-contain object-center shadow-md"
+            className="aspect-[4/5] w-full object-cover object-center"
+          />
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#2C1810]/25 to-transparent"
+            aria-hidden="true"
           />
         </div>
 
-        <div className="flex w-full items-center justify-center bg-cream px-4 py-10 sm:px-10 sm:py-16 lg:w-1/2 lg:px-12 lg:py-20 xl:px-16">
-          <div className="mx-auto w-full max-w-md text-left">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold sm:text-sm">
+        <div
+          className={[
+            'w-full transition-all duration-700',
+            product.visible ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0',
+          ].join(' ')}
+          style={{ transitionDelay: product.visible ? '120ms' : '0ms' }}
+        >
+          <div className="flex items-center gap-3">
+            <span className="h-px w-8 bg-gold" aria-hidden="true" />
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">
               Our Bestseller
             </p>
+          </div>
 
-            <h2 className="mt-3 fluid-title font-serif font-bold text-[#2C1810]">
-              Extra Gentle Daily Shampoo
-            </h2>
+          <h2 className="mt-4 font-serif text-3xl font-semibold leading-tight tracking-tight text-[#2C1810] sm:text-4xl lg:text-[2.75rem]">
+            Extra Gentle Daily Shampoo
+          </h2>
 
-            <p className="mt-4 text-sm leading-relaxed text-stone-600 sm:mt-5 sm:text-base">
-              Infused with Amla, Reetha, and Shikakai — a time-tested formula that cleanses
-              gently while nourishing your hair naturally. Free from harsh sulfates, safe for
-              everyday use.
-            </p>
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-stone-600 sm:text-base sm:leading-7">
+            A quiet daily cleanse — time-tested botanicals that soften without stripping,
+            made for hair you live in every day.
+          </p>
 
-            <ul className="mt-5 space-y-2.5 sm:mt-6 sm:space-y-3">
-              {features.map((item) => (
-                <li key={item} className="flex items-center gap-3 text-sm text-stone-700 sm:text-base">
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
-                    <Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden="true" />
-                  </span>
-                  {item}
-                </li>
-              ))}
-            </ul>
+          <div className="mt-7 grid grid-cols-3 gap-2 rounded-2xl border border-[#2C1810]/10 bg-white/60 px-2 py-4 sm:gap-4 sm:px-4 sm:py-5">
+            {botanicals.map(({ name, note }) => (
+              <div key={name} className="text-center">
+                <p className="font-serif text-lg font-semibold text-[#2C1810] sm:text-xl">{name}</p>
+                <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-stone-500">{note}</p>
+              </div>
+            ))}
+          </div>
 
-            <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
-              <p className="text-xl font-bold text-[#2C1810] sm:text-2xl">
+          <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+            {features.map(({ label, detail }) => (
+              <li
+                key={label}
+                className="rounded-xl border border-[#2C1810]/8 bg-white/50 px-4 py-3"
+              >
+                <p className="text-sm font-semibold text-[#2C1810]">{label}</p>
+                <p className="mt-0.5 text-xs text-stone-500">{detail}</p>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-[#2C1810]/10 bg-white/70 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-500">
+                Price
+              </p>
+              <p className="mt-0.5 font-serif text-3xl font-semibold tracking-tight text-[#2C1810] sm:text-4xl">
                 {MAIN_PRODUCT.priceLabel}
               </p>
-              <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-3">
-                <button
-                  type="button"
-                  onClick={handleAdd}
-                  className="min-h-12 rounded-full bg-gold px-5 py-3 text-sm font-semibold text-white shadow-sm transition-transform duration-200 active:scale-[0.98] hover:scale-105 sm:px-7 sm:text-base"
-                >
-                  {added ? 'Added!' : 'Add to Cart'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => openWhatsAppBuyNow(MAIN_PRODUCT)}
-                  className="min-h-12 rounded-full border-2 border-gold px-5 py-3 text-sm font-semibold text-gold transition-transform duration-200 active:scale-[0.98] hover:scale-105 hover:bg-gold hover:text-white sm:px-7 sm:text-base"
-                >
-                  Buy Now
-                </button>
-              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:shrink-0 sm:gap-3">
+              <button
+                type="button"
+                onClick={handleAdd}
+                className="min-h-12 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98] hover:bg-[#9A7209] sm:px-7"
+              >
+                {added ? 'Added' : 'Add to Cart'}
+              </button>
+              <button
+                type="button"
+                onClick={() => openWhatsAppBuyNow(MAIN_PRODUCT)}
+                className="min-h-12 rounded-full border border-[#2C1810]/25 px-6 py-3 text-sm font-semibold text-[#2C1810] transition-all duration-200 active:scale-[0.98] hover:border-gold hover:text-gold sm:px-7"
+              >
+                Buy Now
+              </button>
             </div>
           </div>
         </div>

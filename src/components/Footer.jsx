@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Mail, Phone, MapPin } from 'lucide-react'
+import { Mail, Phone, MapPin, MessageCircle } from 'lucide-react'
 import { InstagramIcon, FacebookIcon } from './SocialIcons'
+import { buildWhatsAppUrl } from '../data/product'
 
 const quickLinks = [
   { to: '/', label: 'Home' },
@@ -10,126 +11,168 @@ const quickLinks = [
   { to: '/contact', label: 'Contact' },
 ]
 
+const INSTAGRAM = 'https://www.instagram.com/fem10_official?utm_source=qr&stkn=YzhibXJ2NDhsajZy'
+const FACEBOOK = 'https://www.facebook.com/share/1F2xbCQ27r/'
+const askWhatsAppUrl = buildWhatsAppUrl('Hello Femten! I have a question.')
+
 function Footer() {
   const [email, setEmail] = useState('')
+  const [subscribed, setSubscribed] = useState(false)
 
   const handleSubscribe = (e) => {
     e.preventDefault()
+    setSubscribed(true)
     setEmail('')
   }
 
   return (
-    <footer className="bg-neutral-900 text-cream">
-      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8 lg:px-8 lg:py-16">
-        {/* Brand */}
-        <div className="col-span-2 md:col-span-2 lg:col-span-1">
-          <img
-            src="/logo/fem10logo.png"
-            alt="Femten"
-            className="h-16 max-w-[12rem] w-auto object-contain sm:h-24 sm:max-w-[16rem]"
-          />
-          <p className="mt-3 text-sm text-cream/80">Pure Care, Natural Beauty</p>
-        </div>
+    <footer className="border-t border-gold/20 bg-[#141414] text-cream">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        {/* Top: brand + links + newsletter — compact 3-col on desktop */}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10 md:items-start">
+          {/* Brand */}
+          <div className="flex flex-col items-center text-center md:items-start md:text-left">
+            <div className="inline-flex rounded-lg bg-cream p-2">
+              <img
+                src="/logo/fem10logo.png"
+                alt="Femten"
+                className="h-10 w-auto max-w-[8.5rem] object-contain sm:h-11"
+              />
+            </div>
+            <p className="mt-3 max-w-[16rem] text-xs leading-relaxed text-cream/60 sm:text-[13px]">
+              Pure Care, Natural Beauty
+            </p>
+            <div className="mt-3.5 flex items-center gap-2.5">
+              <a
+                href={INSTAGRAM}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-cream/15 text-cream/70 transition-colors hover:border-gold hover:text-gold"
+              >
+                <InstagramIcon className="h-3.5 w-3.5" />
+              </a>
+              <a
+                href={FACEBOOK}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-cream/15 text-cream/70 transition-colors hover:border-gold hover:text-gold"
+              >
+                <FacebookIcon className="h-3.5 w-3.5" />
+              </a>
+              <a
+                href={askWhatsAppUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="flex h-9 items-center gap-1.5 rounded-full bg-gold/90 px-3.5 text-xs font-semibold text-white transition-colors hover:bg-gold"
+              >
+                <MessageCircle className="h-3.5 w-3.5" />
+                Ask
+              </a>
+            </div>
+          </div>
 
-        {/* Quick Links */}
-        <div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
-            Quick Links
-          </h3>
-          <ul className="mt-4 space-y-2.5">
-            {quickLinks.map((link) => (
-              <li key={link.to}>
-                <Link
-                  to={link.to}
-                  className="text-sm text-cream/80 transition-colors hover:text-gold"
+          {/* Links + Contact */}
+          <div className="grid grid-cols-2 gap-6 text-center md:text-left">
+            <div>
+              <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">
+                Explore
+              </h3>
+              <ul className="mt-3.5 space-y-2">
+                {quickLinks.map((link) => (
+                  <li key={link.to}>
+                    <Link
+                      to={link.to}
+                      className="text-sm text-cream/70 transition-colors hover:text-gold"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">
+                Contact
+              </h3>
+              <ul className="mt-3.5 space-y-2.5 text-xs text-cream/70 sm:text-sm">
+                <li>
+                  <a
+                    href="mailto:fem10official@gmail.com"
+                    className="inline-flex items-start justify-center gap-2 transition-colors hover:text-gold md:justify-start"
+                  >
+                    <Mail className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gold" />
+                    <span className="break-all text-left">fem10official@gmail.com</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="tel:+923027727778"
+                    className="inline-flex items-center justify-center gap-2 transition-colors hover:text-gold md:justify-start"
+                  >
+                    <Phone className="h-3.5 w-3.5 shrink-0 text-gold" />
+                    0302 7727778
+                  </a>
+                </li>
+                <li className="inline-flex items-center justify-center gap-2 md:justify-start">
+                  <MapPin className="h-3.5 w-3.5 shrink-0 text-gold" />
+                  Vehari, Pakistan
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Newsletter — slim */}
+          <div className="text-center md:text-left">
+            <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">
+              Newsletter
+            </h3>
+            <p className="mt-3.5 text-xs leading-relaxed text-cream/55 sm:text-[13px]">
+              Soft hair tips & offers — straight to your inbox.
+            </p>
+            {subscribed ? (
+              <p className="mt-3 text-sm font-medium text-gold">You&apos;re subscribed.</p>
+            ) : (
+              <form
+                onSubmit={handleSubscribe}
+                className="mx-auto mt-3.5 flex max-w-sm flex-col gap-2 sm:flex-row md:mx-0"
+              >
+                <label htmlFor="footer-email" className="sr-only">
+                  Email
+                </label>
+                <input
+                  id="footer-email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email"
+                  className="min-h-10 flex-1 rounded-full border border-cream/12 bg-white/[0.04] px-4 text-sm text-cream placeholder:text-cream/35 outline-none focus:border-gold"
+                />
+                <button
+                  type="submit"
+                  className="min-h-10 shrink-0 rounded-full bg-gold px-5 text-sm font-semibold text-white transition-colors hover:bg-[#9A7209]"
                 >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Contact */}
-        <div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
-            Contact
-          </h3>
-          <ul className="mt-4 space-y-3 text-sm text-cream/80">
-            <li className="flex items-start gap-2.5">
-              <Mail className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
-              <a href="mailto:hello@fem10.com" className="transition-colors hover:text-gold">
-                hello@fem10.com
-              </a>
-            </li>
-            <li className="flex items-start gap-2.5">
-              <Phone className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
-              <a href="tel:+923001234567" className="transition-colors hover:text-gold">
-                +92 300 1234567
-              </a>
-            </li>
-            <li className="flex items-start gap-2.5">
-              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
-              <span>Lahore, Pakistan</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Newsletter */}
-        <div className="col-span-2 md:col-span-2 lg:col-span-1">
-          <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
-            Newsletter
-          </h3>
-          <p className="mt-4 text-sm text-cream/80">Join our newsletter</p>
-          <form onSubmit={handleSubscribe} className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
-            <label htmlFor="footer-email" className="sr-only">
-              Email address
-            </label>
-            <input
-              id="footer-email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your email"
-              className="w-full rounded-full border border-cream/20 bg-neutral-800 px-4 py-3 text-sm text-cream placeholder:text-cream/40 outline-none focus:border-gold"
-            />
-            <button
-              type="submit"
-              className="min-h-11 shrink-0 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-white transition-transform duration-200 active:scale-[0.98] hover:scale-105"
-            >
-              Subscribe
-            </button>
-          </form>
+                  Join
+                </button>
+              </form>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-gold/40">
-        <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 py-5 sm:px-6 lg:px-8">
-          <p className="text-center text-xs text-cream/60 sm:text-sm">
+      {/* Slim bottom bar */}
+      <div className="border-t border-cream/[0.08]">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-1.5 px-4 py-3.5 text-center sm:flex-row sm:px-6 sm:text-left lg:px-8">
+          <p className="text-[11px] text-cream/45 sm:text-xs">
             © 2026 Femten. All rights reserved.
           </p>
-          <div className="flex gap-3 sm:absolute sm:right-6 sm:top-1/2 sm:-translate-y-1/2 lg:right-8">
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="text-cream/70 transition-colors hover:text-gold"
-            >
-              <InstagramIcon className="h-4 w-4" />
-            </a>
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="text-cream/70 transition-colors hover:text-gold"
-            >
-              <FacebookIcon className="h-4 w-4" />
-            </a>
-          </div>
+          <p className="text-[11px] tracking-wide text-cream/35 sm:text-xs">
+            Extra Gentle Daily Shampoo
+          </p>
         </div>
       </div>
     </footer>
