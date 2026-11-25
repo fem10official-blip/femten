@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { Star } from 'lucide-react'
 import { useCart } from '../context/CartContext'
-import { openWhatsAppBuyNow } from '../data/product'
 
 function ProductCard({ id, image, title, description, price, priceLabel, priceValue }) {
-  const { addToCart } = useCart()
+  const { addToCart, buyNow } = useCart()
   const [added, setAdded] = useState(false)
 
   const numericPrice = priceValue ?? (typeof price === 'number' ? price : Number(String(price).replace(/[^\d]/g, '')))
@@ -60,7 +59,7 @@ function ProductCard({ id, image, title, description, price, priceLabel, priceVa
           </button>
           <button
             type="button"
-            onClick={() => openWhatsAppBuyNow(product)}
+            onClick={() => buyNow(product)}
             className="w-full rounded-full border-2 border-gold py-3 text-sm font-semibold text-gold transition-transform duration-200 hover:scale-105 hover:bg-gold hover:text-white"
           >
             Buy Now

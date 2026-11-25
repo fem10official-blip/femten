@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Droplets, Hand, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
-import { MAIN_PRODUCT, openWhatsAppBuyNow } from '../data/product'
+import { MAIN_PRODUCT } from '../data/product'
 import { useInView } from '../hooks/useInView'
 
 const botanicals = [
@@ -49,7 +49,7 @@ const highlights = [
 ]
 
 function ProductShowcase() {
-  const { addToCart } = useCart()
+  const { addToCart, buyNow } = useCart()
   const [added, setAdded] = useState(false)
   const product = useInView(0.15)
   const ritual = useInView(0.12)
@@ -74,7 +74,7 @@ function ProductShowcase() {
           ].join(' ')}
         >
           <img
-            src="/images/product/our-best-seller.jpeg"
+            src="/images/product/our-best-seller.jpg"
             alt="Femten Extra Gentle Daily Shampoo — Our Bestseller"
             className="aspect-[4/5] w-full object-cover object-center"
           />
@@ -147,7 +147,7 @@ function ProductShowcase() {
               </button>
               <button
                 type="button"
-                onClick={() => openWhatsAppBuyNow(MAIN_PRODUCT)}
+                onClick={() => buyNow(MAIN_PRODUCT)}
                 className="min-h-12 rounded-full border border-[#2C1810]/25 px-6 py-3 text-sm font-semibold text-[#2C1810] transition-all duration-200 active:scale-[0.98] hover:border-gold hover:text-gold sm:px-7"
               >
                 Buy Now

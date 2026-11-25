@@ -50,7 +50,7 @@ function About() {
             ].join(' ')}
           >
             <img
-              src="/images/product/product-model-giant-bottle.png"
+              src="/images/product/product-model-giant-bottle.jpg"
               alt="Woman with Femten Extra Gentle Daily Shampoo"
               className="w-full rounded-2xl object-cover shadow-lg aspect-[4/5] sm:aspect-[3/4] lg:aspect-auto lg:max-h-[560px]"
             />

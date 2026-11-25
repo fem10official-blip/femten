@@ -15,6 +15,8 @@ function loadCart() {
 export function CartProvider({ children }) {
   const [items, setItems] = useState(() => loadCart())
   const [isOpen, setIsOpen] = useState(false)
+  const [drawerStep, setDrawerStep] = useState('cart') // 'cart' | 'checkout' | 'success'
+  const [lastPlacedOrder, setLastPlacedOrder] = useState(null)
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
@@ -42,6 +44,13 @@ export function CartProvider({ children }) {
         },
       ]
     })
+    setDrawerStep('cart')
+    setIsOpen(true)
+  }
+
+  const buyNow = (product, quantity = 1) => {
+    addToCart(product, quantity)
+    setDrawerStep('checkout')
     setIsOpen(true)
   }
 
@@ -71,12 +80,30 @@ export function CartProvider({ children }) {
     [items]
   )
 
+  const closeCart = () => {
+    setIsOpen(false)
+    // Reset to 'cart' step slightly after closing animation
+    setTimeout(() => {
+      if (drawerStep === 'success') {
+        setDrawerStep('cart')
+      }
+    }, 300)
+  }
+
   const value = {
     items,
     isOpen,
-    openCart: () => setIsOpen(true),
-    closeCart: () => setIsOpen(false),
+    drawerStep,
+    setDrawerStep,
+    lastPlacedOrder,
+    setLastPlacedOrder,
+    openCart: () => {
+      setDrawerStep('cart')
+      setIsOpen(true)
+    },
+    closeCart,
     addToCart,
+    buyNow,
     removeFromCart,
     updateQuantity,
     clearCart,

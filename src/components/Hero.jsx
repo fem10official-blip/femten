@@ -7,14 +7,14 @@ function Hero() {
       <div
         className="absolute inset-0 hidden bg-cover bg-no-repeat md:block md:bg-[82%_12%]"
         style={{
-          backgroundImage: "url('/images/hero/hero-model-landscape.png')",
+          backgroundImage: "url('/images/hero/hero-model-landscape.jpg')",
         }}
         aria-hidden="true"
       />
 
       {/* Mobile: portrait crop — face near top */}
       <img
-        src="/images/product/product-model-giant-bottle.png"
+        src="/images/product/product-model-giant-bottle.jpg"
         alt=""
         className="absolute inset-0 h-full w-full object-cover object-[50%_8%] md:hidden"
         aria-hidden="true"

@@ -6,7 +6,7 @@ export const MAIN_PRODUCT = {
   description: 'Infused with Amla, Reetha, Shikakai',
   price: 350,
   priceLabel: 'Rs. 350',
-  image: '/images/product/our-best-seller.jpeg',
+  image: '/images/product/our-best-seller.jpg',
 }
 
 export function buildWhatsAppUrl(message) {
