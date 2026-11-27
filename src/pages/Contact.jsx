@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import { Mail, Phone, MapPin, Clock } from 'lucide-react'
+import { Mail, MapPin, Clock } from 'lucide-react'
 import { InstagramIcon, FacebookIcon } from '../components/SocialIcons'
 import { useInView } from '../hooks/useInView'
 
 const contactDetails = [
   { label: 'Email', value: 'fem10official@gmail.com', href: 'mailto:fem10official@gmail.com', Icon: Mail },
-  { label: 'Phone', value: '0302 7727778', href: 'tel:+923027727778', Icon: Phone },
   { label: 'Address', value: 'Islamabad, Pakistan', href: null, Icon: MapPin },
   { label: 'Hours', value: 'Mon-Sat, 9am - 6pm', href: null, Icon: Clock },
 ]
