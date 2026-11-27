@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Mail, Phone, MapPin, MessageCircle } from 'lucide-react'
+import { Mail, MapPin, MessageCircle } from 'lucide-react'
 import { InstagramIcon, FacebookIcon } from './SocialIcons'
 import { buildWhatsAppUrl } from '../data/product'
 
@@ -108,18 +108,9 @@ function Footer() {
                     <span className="break-all text-left">fem10official@gmail.com</span>
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="tel:+923027727778"
-                    className="inline-flex items-center justify-center gap-2 transition-colors hover:text-gold md:justify-start"
-                  >
-                    <Phone className="h-3.5 w-3.5 shrink-0 text-gold" />
-                    0302 7727778
-                  </a>
-                </li>
                 <li className="inline-flex items-center justify-center gap-2 md:justify-start">
                   <MapPin className="h-3.5 w-3.5 shrink-0 text-gold" />
-                  Vehari, Pakistan
+                  Islamabad, Pakistan
                 </li>
               </ul>
             </div>

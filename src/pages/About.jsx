@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Leaf, Heart, ShieldCheck } from 'lucide-react'
+import { Leaf, Heart, Sparkles } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 
 const values = [
@@ -14,9 +14,9 @@ const values = [
     Icon: Heart,
   },
   {
-    title: 'Dermatologically Tested',
-    description: 'Formulated for everyday use and gentle enough for sensitive scalps.',
-    Icon: ShieldCheck,
+    title: 'Pure Botanical Care',
+    description: 'Gentle pH-balanced herbal formula crafted to nourish scalp and hair from root to tip.',
+    Icon: Sparkles,
   },
 ]
 

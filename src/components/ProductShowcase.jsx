@@ -14,8 +14,8 @@ const botanicals = [
 const features = [
   { label: 'Sulfate-Free', detail: 'No harsh foam' },
   { label: 'All Hair Types', detail: 'Daily gentle' },
-  { label: 'Dermatologically Tested', detail: 'Skin-safe' },
-  { label: 'Natural Extracts', detail: 'Botanical care' },
+  { label: 'Pure Botanical Care', detail: 'Scalp friendly' },
+  { label: 'Natural Extracts', detail: 'Herbal care' },
 ]
 
 const ritualSteps = [
