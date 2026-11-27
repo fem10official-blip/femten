@@ -1,83 +1,148 @@
+import { supabase } from './supabaseClient'
+
 const ORDERS_STORAGE_KEY = 'fem10_orders'
 const EMAIL_LOGS_STORAGE_KEY = 'fem10_email_logs'
 
-export function getOrders() {
+function formatDbOrder(row) {
+  return {
+    id: row.id,
+    createdAt: row.created_at,
+    customer: row.customer || {},
+    items: row.items || [],
+    totalPrice: Number(row.total_price) || 0,
+    paymentMethod: row.payment_method || 'Cash on Delivery (COD)',
+    status: row.status || 'Pending',
+  }
+}
+
+export async function getOrders() {
+  try {
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (!error && Array.isArray(data)) {
+      const formatted = data.map(formatDbOrder)
+      try {
+        localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(formatted))
+      } catch {}
+      return formatted
+    }
+  } catch (err) {
+    console.warn('Supabase fetch failed, falling back to local storage:', err)
+  }
+
+  // Fallback to local storage
   try {
     const raw = localStorage.getItem(ORDERS_STORAGE_KEY)
     if (!raw) return []
     const parsed = JSON.parse(raw)
     return Array.isArray(parsed) ? parsed : []
-  } catch (error) {
-    console.error('Error loading orders:', error)
+  } catch {
     return []
   }
 }
 
-export function saveOrder(orderInput) {
+export async function saveOrder(orderInput) {
+  const newOrder = {
+    id: orderInput.id || `FEM-${Date.now().toString().slice(-6)}`,
+    createdAt: new Date().toISOString(),
+    customer: {
+      name: orderInput.customer?.name || 'Customer',
+      email: orderInput.customer?.email || '',
+      phone: orderInput.customer?.phone || '',
+      address: orderInput.customer?.address || '',
+      city: orderInput.customer?.city || '',
+      notes: orderInput.customer?.notes || '',
+    },
+    items: orderInput.items || [],
+    totalPrice: orderInput.totalPrice || 0,
+    paymentMethod: orderInput.paymentMethod || 'Cash on Delivery (COD)',
+    status: orderInput.status || 'Pending',
+  }
+
+  // 1. Save to Supabase Cloud Database
   try {
-    const currentOrders = getOrders()
-    const newOrder = {
-      id: orderInput.id || `FEM-${Date.now().toString().slice(-6)}`,
-      createdAt: new Date().toISOString(),
-      customer: {
-        name: orderInput.customer?.name || 'Customer',
-        email: orderInput.customer?.email || '',
-        phone: orderInput.customer?.phone || '',
-        address: orderInput.customer?.address || '',
-        city: orderInput.customer?.city || '',
-        notes: orderInput.customer?.notes || '',
+    const { error } = await supabase.from('orders').insert([
+      {
+        id: newOrder.id,
+        created_at: newOrder.createdAt,
+        customer: newOrder.customer,
+        items: newOrder.items,
+        total_price: newOrder.totalPrice,
+        payment_method: newOrder.paymentMethod,
+        status: newOrder.status,
       },
-      items: orderInput.items || [],
-      totalPrice: orderInput.totalPrice || 0,
-      paymentMethod: orderInput.paymentMethod || 'Cash on Delivery (COD)',
-      status: orderInput.status || 'Pending',
+    ])
+    if (error) {
+      console.error('Supabase insert error:', error)
+    } else {
+      console.log('Order successfully synced to Supabase Cloud:', newOrder.id)
     }
-
-    const updated = [newOrder, ...currentOrders]
-    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(updated))
-    window.dispatchEvent(new Event('fem10_orders_updated'))
-    return newOrder
-  } catch (error) {
-    console.error('Error saving order:', error)
-    throw error
+  } catch (err) {
+    console.error('Supabase saveOrder exception:', err)
   }
-}
 
-export function updateOrderStatus(orderId, newStatus) {
+  // 2. Cache locally in browser
   try {
-    const currentOrders = getOrders()
-    const updated = currentOrders.map((order) =>
-      order.id === orderId ? { ...order, status: newStatus } : order
-    )
-    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(updated))
-    window.dispatchEvent(new Event('fem10_orders_updated'))
-    return updated
-  } catch (error) {
-    console.error('Error updating order status:', error)
-    return getOrders()
-  }
+    const local = JSON.parse(localStorage.getItem(ORDERS_STORAGE_KEY) || '[]')
+    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify([newOrder, ...local]))
+  } catch {}
+
+  window.dispatchEvent(new Event('fem10_orders_updated'))
+  return newOrder
 }
 
-export function deleteOrder(orderId) {
+export async function updateOrderStatus(orderId, newStatus) {
   try {
-    const currentOrders = getOrders()
-    const updated = currentOrders.filter((order) => order.id !== orderId)
-    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(updated))
-    window.dispatchEvent(new Event('fem10_orders_updated'))
-    return updated
-  } catch (error) {
-    console.error('Error deleting order:', error)
-    return getOrders()
+    const { error } = await supabase
+      .from('orders')
+      .update({ status: newStatus })
+      .eq('id', orderId)
+    if (error) console.error('Supabase update status error:', error)
+  } catch (err) {
+    console.error('Supabase updateOrderStatus exception:', err)
   }
+
+  try {
+    const local = JSON.parse(localStorage.getItem(ORDERS_STORAGE_KEY) || '[]')
+    const updated = local.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
+    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(updated))
+  } catch {}
+
+  window.dispatchEvent(new Event('fem10_orders_updated'))
 }
 
-export function clearAllOrders() {
+export async function deleteOrder(orderId) {
+  try {
+    const { error } = await supabase.from('orders').delete().eq('id', orderId)
+    if (error) console.error('Supabase delete error:', error)
+  } catch (err) {
+    console.error('Supabase deleteOrder exception:', err)
+  }
+
+  try {
+    const local = JSON.parse(localStorage.getItem(ORDERS_STORAGE_KEY) || '[]')
+    const updated = local.filter((o) => o.id !== orderId)
+    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(updated))
+  } catch {}
+
+  window.dispatchEvent(new Event('fem10_orders_updated'))
+}
+
+export async function clearAllOrders() {
+  try {
+    await supabase.from('orders').delete().neq('id', '')
+  } catch (err) {
+    console.error('Supabase clearAllOrders error:', err)
+  }
+
   try {
     localStorage.removeItem(ORDERS_STORAGE_KEY)
-    window.dispatchEvent(new Event('fem10_orders_updated'))
-  } catch (error) {
-    console.error('Error clearing orders:', error)
-  }
+  } catch {}
+
+  window.dispatchEvent(new Event('fem10_orders_updated'))
 }
 
 export function getEmailLogs() {

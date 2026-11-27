@@ -86,8 +86,8 @@ function CartDrawer() {
     setError('')
 
     try {
-      // 1. Save order locally
-      const order = saveOrder({
+      // 1. Save order to Supabase cloud database
+      const order = await saveOrder({
         customer: {
           name: formData.name.trim(),
           email: formData.email.trim(),

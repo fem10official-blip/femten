@@ -25,6 +25,7 @@ import {
   saveOrder,
   updateOrderStatus,
 } from '../services/orderService'
+import { supabase } from '../services/supabaseClient'
 
 const ADMIN_STORAGE_KEY = 'fem10_admin_logged_in'
 // Allowed administrator passwords
@@ -44,13 +45,20 @@ function Admin() {
 
   const [orders, setOrders] = useState([])
   const [emailLogs, setEmailLogs] = useState([])
+  const [loadingOrders, setLoadingOrders] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('ALL')
   const [activeTab, setActiveTab] = useState('orders')
 
-  // Load orders & email logs
-  const refreshData = () => {
-    setOrders(getOrders())
+  // Load orders from Supabase cloud database
+  const refreshData = async () => {
+    setLoadingOrders(true)
+    try {
+      const fetched = await getOrders()
+      setOrders(fetched)
+    } finally {
+      setLoadingOrders(false)
+    }
     setEmailLogs(getEmailLogs())
   }
 
@@ -58,7 +66,19 @@ function Admin() {
     if (isAuthenticated) {
       refreshData()
       window.addEventListener('fem10_orders_updated', refreshData)
-      return () => window.removeEventListener('fem10_orders_updated', refreshData)
+
+      // Supabase Realtime Subscription for instant order updates!
+      const channel = supabase
+        .channel('admin-live-orders')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => {
+          refreshData()
+        })
+        .subscribe()
+
+      return () => {
+        window.removeEventListener('fem10_orders_updated', refreshData)
+        supabase.removeChannel(channel)
+      }
     }
   }, [isAuthenticated])
 
@@ -80,28 +100,28 @@ function Admin() {
     setPasswordInput('')
   }
 
-  const handleStatusChange = (orderId, newStatus) => {
-    updateOrderStatus(orderId, newStatus)
+  const handleStatusChange = async (orderId, newStatus) => {
+    await updateOrderStatus(orderId, newStatus)
     refreshData()
   }
 
-  const handleDelete = (orderId) => {
+  const handleDelete = async (orderId) => {
     if (window.confirm(`Are you sure you want to delete Order #${orderId}?`)) {
-      deleteOrder(orderId)
+      await deleteOrder(orderId)
       refreshData()
     }
   }
 
-  const handleClearAll = () => {
+  const handleClearAll = async () => {
     if (window.confirm('Warning: All orders will be permanently deleted. Do you wish to proceed?')) {
-      clearAllOrders()
+      await clearAllOrders()
       refreshData()
     }
   }
 
-  const handleAddSampleOrder = (isBundle = false) => {
+  const handleAddSampleOrder = async (isBundle = false) => {
     if (isBundle) {
-      saveOrder({
+      await saveOrder({
         customer: {
           name: 'Zainab Tariq',
           email: 'zainab.tariq@example.com',
@@ -125,7 +145,7 @@ function Admin() {
         status: 'Pending',
       })
     } else {
-      saveOrder({
+      await saveOrder({
         customer: {
           name: 'Ayesha Malik',
           email: 'ayesha.malik@example.com',
@@ -239,6 +259,9 @@ function Admin() {
               <h1 className="font-serif text-xl font-bold text-[#2C1810] sm:text-2xl">
                 Femten Admin Portal
               </h1>
+              <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-700 border border-emerald-200">
+                Cloud Connected ⚡
+              </span>
             </div>
             <p className="text-xs text-stone-500">
               Manage customer orders, fulfillment statuses, and email confirmation logs
@@ -249,10 +272,11 @@ function Admin() {
             <button
               type="button"
               onClick={refreshData}
+              disabled={loadingOrders}
               className="inline-flex items-center gap-1.5 rounded-full border border-stone-200 px-3 py-1.5 text-xs font-medium text-stone-600 hover:bg-stone-50"
             >
-              <RefreshCw className="h-3.5 w-3.5" />
-              Refresh
+              <RefreshCw className={`h-3.5 w-3.5 ${loadingOrders ? 'animate-spin text-gold' : ''}`} />
+              {loadingOrders ? 'Syncing...' : 'Refresh'}
             </button>
             <button
               type="button"
