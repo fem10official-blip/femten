@@ -69,7 +69,8 @@ function About() {
             </p>
             <p className="text-base leading-relaxed text-stone-700 sm:text-lg">
               Every bottle is crafted with care, blending nature&apos;s wisdom with modern
-              formulation, so you can enjoy soft, healthy hair — every single day.
+              formulation to deliver 7 complete solutions — overcoming frizz, dullness, dryness,
+              rough texture, slow growth, breakage, and split ends for naturally radiant hair every single day.
             </p>
           </div>
         </div>
