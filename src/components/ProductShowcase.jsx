@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Droplets, Hand, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
-import { MAIN_PRODUCT } from '../data/product'
+import { MAIN_PRODUCT, BUNDLE_PRODUCT } from '../data/product'
 import { useInView } from '../hooks/useInView'
 
 const botanicals = [
@@ -50,12 +50,13 @@ const highlights = [
 
 function ProductShowcase() {
   const { addToCart, buyNow } = useCart()
+  const [selectedProduct, setSelectedProduct] = useState(MAIN_PRODUCT)
   const [added, setAdded] = useState(false)
   const product = useInView(0.15)
   const ritual = useInView(0.12)
 
   const handleAdd = () => {
-    addToCart(MAIN_PRODUCT)
+    addToCart(selectedProduct)
     setAdded(true)
     window.setTimeout(() => setAdded(false), 1500)
   }
@@ -74,9 +75,9 @@ function ProductShowcase() {
           ].join(' ')}
         >
           <img
-            src="/images/product/our-best-seller.jpg"
-            alt="Femten Extra Gentle Daily Shampoo — Our Bestseller"
-            className="aspect-[4/5] w-full object-cover object-center"
+            src={selectedProduct.image}
+            alt={`${selectedProduct.title} — Femten`}
+            className="aspect-[4/5] w-full object-cover object-center transition-all duration-500"
           />
           <div
             className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#2C1810]/25 to-transparent"
@@ -94,7 +95,7 @@ function ProductShowcase() {
           <div className="flex items-center gap-3">
             <span className="h-px w-8 bg-gold" aria-hidden="true" />
             <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">
-              Our Bestseller
+              Our Bestseller & Special Deals
             </p>
           </div>
 
@@ -128,30 +129,77 @@ function ProductShowcase() {
             ))}
           </ul>
 
-          <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-[#2C1810]/10 bg-white/70 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+          <div className="mt-8 space-y-4 rounded-2xl border border-[#2C1810]/10 bg-white/70 p-4 sm:p-5">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-500">
-                Price
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-500 mb-2">
+                Choose Pack / Deal
               </p>
-              <p className="mt-0.5 font-serif text-3xl font-semibold tracking-tight text-[#2C1810] sm:text-4xl">
-                {MAIN_PRODUCT.priceLabel}
-              </p>
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                <button
+                  type="button"
+                  onClick={() => setSelectedProduct(MAIN_PRODUCT)}
+                  className={`flex flex-col items-start rounded-xl border p-3 text-left transition-all ${
+                    selectedProduct.id === MAIN_PRODUCT.id
+                      ? 'border-gold bg-gold/10 ring-2 ring-gold/30'
+                      : 'border-stone-200 bg-white/80 hover:border-stone-300'
+                  }`}
+                >
+                  <span className="text-xs font-bold text-[#2C1810]">Single Bottle</span>
+                  <span className="mt-0.5 text-sm font-semibold text-gold">Rs. 450</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedProduct(BUNDLE_PRODUCT)}
+                  className={`relative flex flex-col items-start rounded-xl border p-3 text-left transition-all ${
+                    selectedProduct.id === BUNDLE_PRODUCT.id
+                      ? 'border-gold bg-gold/10 ring-2 ring-gold/30'
+                      : 'border-stone-200 bg-white/80 hover:border-stone-300'
+                  }`}
+                >
+                  <span className="absolute -top-2.5 right-2 rounded-full bg-gold px-2 py-0.5 text-[9px] font-bold text-white shadow-sm">
+                    Save Rs. 351
+                  </span>
+                  <span className="text-xs font-bold text-[#2C1810]">Bundle of 3</span>
+                  <div className="mt-0.5 flex items-baseline gap-1">
+                    <span className="text-sm font-semibold text-gold">Rs. 999</span>
+                    <span className="text-[10px] text-stone-400 line-through">Rs. 1,350</span>
+                  </div>
+                </button>
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 sm:flex sm:shrink-0 sm:gap-3">
-              <button
-                type="button"
-                onClick={handleAdd}
-                className="min-h-12 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98] hover:bg-[#9A7209] sm:px-7"
-              >
-                {added ? 'Added' : 'Add to Cart'}
-              </button>
-              <button
-                type="button"
-                onClick={() => buyNow(MAIN_PRODUCT)}
-                className="min-h-12 rounded-full border border-[#2C1810]/25 px-6 py-3 text-sm font-semibold text-[#2C1810] transition-all duration-200 active:scale-[0.98] hover:border-gold hover:text-gold sm:px-7"
-              >
-                Buy Now
-              </button>
+
+            <div className="flex flex-col gap-4 border-t border-stone-200/60 pt-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-500">
+                  Total Price
+                </p>
+                <div className="flex items-baseline gap-2">
+                  <p className="font-serif text-3xl font-semibold tracking-tight text-[#2C1810] sm:text-4xl">
+                    {selectedProduct.priceLabel}
+                  </p>
+                  {selectedProduct.originalPriceLabel && (
+                    <span className="text-sm text-stone-400 line-through">
+                      {selectedProduct.originalPriceLabel}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 sm:flex sm:shrink-0 sm:gap-3">
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  className="min-h-12 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98] hover:bg-[#9A7209] sm:px-7"
+                >
+                  {added ? 'Added' : 'Add to Cart'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => buyNow(selectedProduct)}
+                  className="min-h-12 rounded-full border border-[#2C1810]/25 px-6 py-3 text-sm font-semibold text-[#2C1810] transition-all duration-200 active:scale-[0.98] hover:border-gold hover:text-gold sm:px-7"
+                >
+                  Buy Now
+                </button>
+              </div>
             </div>
           </div>
         </div>

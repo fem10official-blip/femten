@@ -1,13 +1,8 @@
 import { Ban, Heart, Leaf } from 'lucide-react'
 import ProductCard from '../components/ProductCard'
-import { MAIN_PRODUCT } from '../data/product'
+import { PRODUCTS } from '../data/product'
 
-const products = [
-  {
-    ...MAIN_PRODUCT,
-    image: '/images/lifestyle/ritual-wet.jpg',
-  },
-]
+const products = PRODUCTS
 
 const whyChoose = [
   { label: 'Free from Sulfates', Icon: Ban },
@@ -34,8 +29,10 @@ function Shop() {
 
       {/* Product grid */}
       <section className="mx-auto max-w-6xl px-4 pb-12 sm:px-6 sm:pb-14 lg:px-8">
-        <div className="mx-auto w-full max-w-md md:max-w-sm">
-          <ProductCard {...products[0]} />
+        <div className="mx-auto grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-2">
+          {products.map((product) => (
+            <ProductCard key={product.id} {...product} />
+          ))}
         </div>
       </section>
 

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Star } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 
-function ProductCard({ id, image, title, description, price, priceLabel, priceValue }) {
+function ProductCard({ id, image, title, description, price, priceLabel, priceValue, originalPriceLabel, badge }) {
   const { addToCart, buyNow } = useCart()
   const [added, setAdded] = useState(false)
 
@@ -25,7 +25,12 @@ function ProductCard({ id, image, title, description, price, priceLabel, priceVa
   }
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+    <article className="relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+      {badge && (
+        <span className="absolute right-3 top-3 z-10 rounded-full bg-gold px-3 py-1 text-xs font-bold text-white shadow-md">
+          {badge}
+        </span>
+      )}
       <div className="aspect-square overflow-hidden rounded-t-2xl">
         <img
           src={image}
@@ -47,7 +52,12 @@ function ProductCard({ id, image, title, description, price, priceLabel, priceVa
           <span className="text-xs text-stone-500">(128 reviews)</span>
         </div>
 
-        <p className="mt-4 text-xl font-bold text-[#2C1810]">{displayPrice}</p>
+        <div className="mt-4 flex items-baseline gap-2">
+          <p className="text-xl font-bold text-[#2C1810]">{displayPrice}</p>
+          {originalPriceLabel && (
+            <span className="text-sm text-stone-400 line-through">{originalPriceLabel}</span>
+          )}
+        </div>
 
         <div className="mt-4 flex flex-col gap-2">
           <button

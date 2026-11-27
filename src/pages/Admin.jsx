@@ -93,30 +93,56 @@ function Admin() {
     }
   }
 
-  const handleAddSampleOrder = () => {
-    saveOrder({
-      customer: {
-        name: 'Ayesha Malik',
-        email: 'ayesha.malik@example.com',
-        phone: '0321-4567890',
-        address: 'House # 42-B, Street 12, DHA Phase 5',
-        city: 'Lahore',
-        notes: 'Please call before delivery',
-      },
-      items: [
-        {
-          id: 'fem10-shampoo',
-          title: 'Extra Gentle Daily Shampoo',
-          price: 350,
-          priceLabel: 'Rs. 350',
-          image: '/images/product/our-best-seller.jpg',
-          quantity: 2,
+  const handleAddSampleOrder = (isBundle = false) => {
+    if (isBundle) {
+      saveOrder({
+        customer: {
+          name: 'Zainab Tariq',
+          email: 'zainab.tariq@example.com',
+          phone: '0300-9876543',
+          address: 'Apartment 4B, Gulberg Heights',
+          city: 'Lahore',
+          notes: 'Special offer bundle of three',
         },
-      ],
-      totalPrice: 700,
-      paymentMethod: 'Cash on Delivery (COD)',
-      status: 'Pending',
-    })
+        items: [
+          {
+            id: 'fem10-bundle-of-three',
+            title: 'Bundle of Three (Pack of 3)',
+            price: 999,
+            priceLabel: 'Rs. 999',
+            image: '/images/product/product-group(3).jpg',
+            quantity: 1,
+          },
+        ],
+        totalPrice: 999,
+        paymentMethod: 'Cash on Delivery (COD)',
+        status: 'Pending',
+      })
+    } else {
+      saveOrder({
+        customer: {
+          name: 'Ayesha Malik',
+          email: 'ayesha.malik@example.com',
+          phone: '0321-4567890',
+          address: 'House # 42-B, Street 12, DHA Phase 5',
+          city: 'Lahore',
+          notes: 'Please call before delivery',
+        },
+        items: [
+          {
+            id: 'fem10-shampoo',
+            title: 'Extra Gentle Daily Shampoo',
+            price: 450,
+            priceLabel: 'Rs. 450',
+            image: '/images/product/our-best-seller.jpg',
+            quantity: 2,
+          },
+        ],
+        totalPrice: 900,
+        paymentMethod: 'Cash on Delivery (COD)',
+        status: 'Pending',
+      })
+    }
     refreshData()
   }
 
@@ -303,11 +329,19 @@ function Admin() {
           <div className="flex items-center gap-2 pb-2">
             <button
               type="button"
-              onClick={handleAddSampleOrder}
+              onClick={() => handleAddSampleOrder(false)}
               className="inline-flex items-center gap-1 rounded-lg bg-gold/10 px-2.5 py-1 text-xs font-semibold text-gold hover:bg-gold/20"
             >
               <PlusCircle className="h-3.5 w-3.5" />
-              Add Sample Order
+              + Sample Order (Single)
+            </button>
+            <button
+              type="button"
+              onClick={() => handleAddSampleOrder(true)}
+              className="inline-flex items-center gap-1 rounded-lg bg-gold px-2.5 py-1 text-xs font-semibold text-white hover:bg-gold/90 shadow-sm"
+            >
+              <PlusCircle className="h-3.5 w-3.5" />
+              + Bundle of 3 Order (Rs. 999)
             </button>
             {orders.length > 0 && (
               <button
