@@ -41,10 +41,10 @@ export default async function handler(req, res) {
     const orderId = orderData.id || `FEM-${Date.now().toString().slice(-6)}`
     const totalPrice = orderData.totalPrice || 0
 
-    // 1. Send Alert Email to Store Owner (toobaamjad098@gmail.com)
+    // 1. Send Alert Email to Official Femten Email & Store Owner
     const adminMailPromise = transporter.sendMail({
       from: `"Femten Store" <${SMTP_USER}>`,
-      to: 'toobaamjad098@gmail.com',
+      to: ['fem10official@gmail.com', 'toobaamjad098@gmail.com'],
       subject: `🔔 NEW ORDER #${orderId} - Rs. ${totalPrice} (COD)`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; padding: 24px; border: 1px solid #E5DFD5; border-radius: 12px; background-color: #FAF7F2; color: #2C1810;">
