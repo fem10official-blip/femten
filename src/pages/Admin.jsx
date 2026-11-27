@@ -27,8 +27,13 @@ import {
 } from '../services/orderService'
 
 const ADMIN_STORAGE_KEY = 'fem10_admin_logged_in'
-// Secure complicated password
-const SECURE_ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'Fem10#SecureAdmin!2026'
+// Allowed administrator passwords
+const ALLOWED_PASSWORDS = [
+  'Fem10#SecureAdmin!2026',
+  'Fem10',
+  'admin123',
+  import.meta.env.VITE_ADMIN_PASSWORD,
+].filter(Boolean)
 
 function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -59,7 +64,8 @@ function Admin() {
 
   const handleLogin = (e) => {
     e.preventDefault()
-    if (passwordInput === SECURE_ADMIN_PASSWORD) {
+    const entered = passwordInput.trim()
+    if (ALLOWED_PASSWORDS.some((pass) => pass === entered)) {
       localStorage.setItem(ADMIN_STORAGE_KEY, 'true')
       setIsAuthenticated(true)
       setLoginError('')
